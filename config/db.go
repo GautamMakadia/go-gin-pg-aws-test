@@ -42,6 +42,7 @@ func Config() *pgxpool.Config {
 	dbConfig, err := pgxpool.ParseConfig(os.Getenv("DB_URL"))
 	if err != nil {
 		log.Fatal("Failed to create a config, error: ", err)
+		return nil
 	}
 
 	dbConfig.MaxConns = defaultMaxConns
