@@ -39,7 +39,7 @@ func Config() *pgxpool.Config {
 	const defaultHealthCheckPeriod = time.Second
 	const defaultConnectTimeout = time.Second * 5
 
-	dbConfig, err := pgxpool.ParseConfig(os.Getenv("DB_URL"))
+	dbConfig, err := pgxpool.ParseConfig("postgres://botmg3002:BoTMG_3002@localhost:5432/student_engagement")
 	if err != nil {
 		log.Fatal("Failed to create a config, error: ", err)
 		return nil
