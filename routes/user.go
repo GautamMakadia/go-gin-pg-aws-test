@@ -16,12 +16,10 @@ import (
 
 type User struct {
 	Id          int              `json:"id"`
+	Name        string           `json:"name"`
 	Email       string           `json:"email"`
 	Password    string           `json:"-"`
-	Create_Time pgtype.Timestamp `json:"create_time"`
-	Last_Login  pgtype.Timestamp `json:"last_login"`
 	Phone       int              `json:"phone"`
-	Name        string           `json:"name"`
 	Role        string           `json:"role"`
 }
 
