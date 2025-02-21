@@ -5,30 +5,22 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"sync"
 	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var (
-	pgOnce sync.Once
-)
-
 var DbPool *pgxpool.Pool
 
 func ConnectDB() {
-	var err error = nil
-	pgOnce.Do(func() {
-		pool, erro := pgxpool.NewWithConfig(context.Background(), Config())
-		fmt.Println("Database Initialized.")
-		if erro != nil {
-			fmt.Fprintf(os.Stderr, "Unable to create db connection pool : %v", err)
-		}
+	pool, erro := pgxpool.NewWithConfig(context.Background(), Config())
+	fmt.Println("Database Initialized.")
+	if erro != nil {
+		log.Fatalf("Unable to create db connection pool : %v", erro)
+	}
 
-		DbPool = pool
-	})
+	DbPool = pool
 }
 
 func Config() *pgxpool.Config {
@@ -39,10 +31,10 @@ func Config() *pgxpool.Config {
 	const defaultHealthCheckPeriod = time.Second
 	const defaultConnectTimeout = time.Second * 5
 
-	dbConfig, err := pgxpool.ParseConfig("postgres://botmg3002:BoTMG_3002@localhost:5432/student_engagement")
+	dbConfig, err := pgxpool.ParseConfig(os.Getenv("DB_URL"))
 	if err != nil {
 		log.Fatal("Failed to create a config, error: ", err)
-		return nil
+		os.Exit(1)
 	}
 
 	dbConfig.MaxConns = defaultMaxConns

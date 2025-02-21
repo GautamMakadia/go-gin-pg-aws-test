@@ -21,9 +21,7 @@ type User struct {
 	Create_Time pgtype.Timestamp `json:"create_time"`
 	Last_Login  pgtype.Timestamp `json:"last_login"`
 	Phone       int              `json:"phone"`
-	Firstname   string           `json:"firstname"`
-	Midname     string           `json:"midname"`
-	Lastname    string           `json:"lastname"`
+	Name        string           `json:"name"`
 	Role        string           `json:"role"`
 }
 
@@ -42,8 +40,8 @@ func UserRoute(router *gin.Engine) {
 }
 
 func getAllUsers(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, User{
-		Id: 3678236, Firstname: "Botg3002", Email: "botmg3002@gmail.com",
+	ctx.JSON(http.StatusOK, []User{
+		{Id: 3678236, Name: "Botg3002", Email: "botmg3002@gmail.com"},
 	})
 }
 
@@ -87,11 +85,10 @@ func saveUser(ctx *gin.Context) {
 	var userInput LoginInput
 
 	if err := ctx.ShouldBindBodyWithJSON(&userInput); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H {
+		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	
 }

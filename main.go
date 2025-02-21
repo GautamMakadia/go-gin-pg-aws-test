@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"runtime"
 	"time"
 
@@ -10,6 +12,7 @@ import (
 	"botmg.com/go-server/routes"
 	"github.com/gin-contrib/cache"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 type Option struct {
@@ -48,6 +51,13 @@ var question = Question{
 }
 
 func main() {
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+		os.Exit(1)
+	}
+
 	var router = config.Router
 	config.ConnectDB()
 
@@ -76,6 +86,4 @@ func main() {
 
 func setupRoute(router *gin.Engine) {
 	routes.UserRoute(router)
-	routes.SessionRoute(router)
-
 }
