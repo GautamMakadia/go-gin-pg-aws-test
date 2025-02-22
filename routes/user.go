@@ -6,8 +6,10 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"botmg.com/go-server/config"
+	"github.com/gin-contrib/cache"
 	"github.com/gin-gonic/gin"
 
 	"github.com/jackc/pgx/v5"
@@ -32,14 +34,36 @@ func UserRoute(router *gin.Engine) {
 
 	userRoute.GET("", getAllUsers)
 	userRoute.GET("/:id", getUserById)
+	userRoute.GET("/cache", cache.CachePage(config.CacheStore, time.Second*30, getAllUsers))
 
 	userRoute.POST("", saveUser)
 }
 
 func getAllUsers(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, []User{
-		{Id: 3678236, Name: "Botg3002", Email: "botmg3002@gmail.com"},
-	})
+	result, err := config.DbPool.Query(context.Background(), "select * from users;")
+
+	if err != nil {
+		log.Println(err)
+		ctx.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"name":  "sql error",
+			"route": "/users",
+		})
+		return
+	}
+
+	defer result.Close()
+
+	users, err := pgx.CollectRows(result, pgx.RowToStructByName[User])
+
+	if err != nil {
+		log.Println(err.Error())
+		ctx.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"msg": "error fetching row from databse",
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, users)
 }
 
 func getUserById(ctx *gin.Context) {
