@@ -1,4 +1,4 @@
-FROM golang:alpine3.21
+FROM golang:alpine As build
 
 WORKDIR /
 
@@ -8,6 +8,9 @@ RUN go mod download
 
 RUN go build ./main.go                                                           
 
-EXPOSE 8080
+FROM alpine As runtime
 
-CMD [ "./main" ]
+WORKDIR /go-server
+
+COPY --from=build ./main ./main
+COPY --from=build ./.env ./.env
