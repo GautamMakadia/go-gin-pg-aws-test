@@ -16,12 +16,12 @@ import (
 )
 
 type User struct {
-	Id          int              `json:"id"`
-	Name        string           `json:"name"`
-	Email       string           `json:"email"`
-	Password    string           `json:"-"`
-	Phone       int              `json:"phone"`
-	Role        string           `json:"role"`
+	Id       int    `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"-"`
+	Phone    int    `json:"phone"`
+	Role     string `json:"role"`
 }
 
 type LoginInput struct {
@@ -44,7 +44,7 @@ func getAllUsers(ctx *gin.Context) {
 
 	if err != nil {
 		log.Println(err)
-		ctx.JSON(http.StatusInternalServerError, map[string]interface{}{
+		ctx.JSON(http.StatusInternalServerError, map[string]any{
 			"name":  "sql error",
 			"route": "/users",
 		})
@@ -57,7 +57,7 @@ func getAllUsers(ctx *gin.Context) {
 
 	if err != nil {
 		log.Println(err.Error())
-		ctx.JSON(http.StatusInternalServerError, map[string]interface{}{
+		ctx.JSON(http.StatusInternalServerError, map[string]any{
 			"msg": "error fetching row from databse",
 		})
 		return
@@ -79,7 +79,7 @@ func getUserById(ctx *gin.Context) {
 
 	if err != nil {
 		log.Println(err)
-		ctx.JSON(http.StatusInternalServerError, map[string]interface{}{
+		ctx.JSON(http.StatusInternalServerError, map[string]any{
 			"name":  "sql error",
 			"route": fmt.Sprintf("/user/%d", id),
 		})
@@ -92,7 +92,7 @@ func getUserById(ctx *gin.Context) {
 
 	if err != nil {
 		log.Println(err.Error())
-		ctx.JSON(http.StatusInternalServerError, map[string]interface{}{
+		ctx.JSON(http.StatusInternalServerError, map[string]any{
 			"msg": "error fetching row from databse",
 		})
 		return
