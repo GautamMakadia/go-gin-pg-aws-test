@@ -1,4 +1,4 @@
-FROM golang:alpine As build
+FROM golang:alpine AS build
 
 WORKDIR /
 
@@ -8,7 +8,7 @@ RUN go mod download
 
 RUN go build ./main.go                                                           
 
-FROM alpine As runtime
+FROM alpine AS runtime
 
 WORKDIR /go-server
 
